@@ -1,23 +1,32 @@
+// DOM variables assignment 
 const todoTextInput = document.querySelector("#textInput");
 const prioritySelector = document.querySelector("#prioritySelector");
 const addButton = document.querySelector("#addButton");
 const todoUl = document.querySelector("#todoUl");
 const todoCounter = document.querySelector("#counter");
 const sortButton = document.querySelector("#sortButton");
+
+//adds the number of tasks to the local storage
 let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
 window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
 
+//sets input to default
 function resetInput() {
     todoTextInput.value = "";
-    prioritySelector.value = "1";
+    prioritySelector.value = "";
+    todoTextInput.focus();
 }
 
 function updateCounter() {
-    // numOfTasks = parseInt(window.localStorage.getItem("num-of-tasks"));
-
     todoCounter.innerText = numOfTasks;
     window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
     numOfTasks++;
+}
+
+function formatDate(date) {
+    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+    const formattedDate = new Date(date - timezoneOffset).toISOString().slice(0, 19).replace('T', ' ');
+    return formattedDate;
 }
 
 const orderByPriority = function() {
@@ -53,13 +62,10 @@ const orderByPriority = function() {
 }
 
 const addTodoToList = function(event) {
-
-
     const todoTextValue = todoTextInput.value;
     const priorityValue = (prioritySelector.value) ? prioritySelector.value : 1;
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    const taskObj = createTaskObj(todoTextValue, priorityValue, dateStr);
+    const date = formatDate(new Date());
+    const taskObj = createTaskObj(todoTextValue, priorityValue, date);
     addTaskToDocument(taskObj)
 
     resetInput();
