@@ -4,15 +4,20 @@ const addButton = document.querySelector("#addButton");
 const todoUl = document.querySelector("#todoUl");
 const todoCounter = document.querySelector("#counter");
 const sortButton = document.querySelector("#sortButton");
-let numOfTodos = 0;
+let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
+window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
 
 function resetInput() {
     todoTextInput.value = "";
     prioritySelector.value = "1";
 }
 
-function updateCounter(numOfTodos) {
-    todoCounter.innerText = numOfTodos;
+function updateCounter() {
+    // numOfTasks = parseInt(window.localStorage.getItem("num-of-tasks"));
+
+    todoCounter.innerText = numOfTasks;
+    window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
+    numOfTasks++;
 }
 
 const orderByPriority = function() {
@@ -48,37 +53,61 @@ const orderByPriority = function() {
 }
 
 const addTodoToList = function(event) {
+
+
+    const todoTextValue = todoTextInput.value;
+    const priorityValue = (prioritySelector.value) ? prioritySelector.value : 1;
+    const date = new Date();
+    const dateStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    const taskObj = createTaskObj(todoTextValue, priorityValue, dateStr);
+    addTaskToDocument(taskObj)
+
+    resetInput();
+}
+
+
+
+function createTaskObj(text, priority, createDate) {
+    updateCounter();
+    const task = {
+        "todo-task": text,
+        "priority": priority,
+        "created-at": createDate
+    };
+    window.localStorage.setItem(`task${parseInt(window.localStorage.getItem("num-of-tasks"))}`, JSON.stringify(task));
+    return task;
+}
+
+function addTaskToDocument(taskObj) {
     const todoLi = document.createElement("li");
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todoContainer");
 
     const todoText = document.createElement("span");
     todoText.classList.add("todoText");
-    todoText.innerText = todoTextInput.value;
+    todoText.innerText = taskObj["todo-task"];
     todoDiv.appendChild(todoText);
 
     const todoPriority = document.createElement("span");
     todoPriority.classList.add("todoPriority");
-    const priority = (prioritySelector.value) ? prioritySelector.value : 1;
-    todoPriority.innerText = priority;
+    todoPriority.innerText = taskObj["priority"];
     todoDiv.appendChild(todoPriority);
 
     const todoDateCreated = document.createElement("span");
     todoDateCreated.classList.add("todoCreatedAt");
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    todoDateCreated.innerText = dateStr;
+    todoDateCreated.innerText = taskObj["created-at"];
     todoDiv.appendChild(todoDateCreated);
 
     todoLi.appendChild(todoDiv);
-    todoLi.classList.add(`priority-${priority}`);
+    todoLi.classList.add(`priority-${taskObj["priority"]}`);
     todoUl.appendChild(todoLi);
-    resetInput();
-
-    updateCounter(++numOfTodos);
 }
-
-updateCounter(numOfTodos);
 
 addButton.addEventListener('click', addTodoToList);
 sortButton.addEventListener('click', orderByPriority);
+window.addEventListener('load', (event) => {
+    for (let i = 1; i < numOfTasks; i++) {
+        addTaskToDocument(JSON.parse(window.localStorage.getItem(`task${i}`)));
+    }
+});
+updateCounter();
