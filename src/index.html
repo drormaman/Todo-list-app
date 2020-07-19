@@ -4,31 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/00dccddc37.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./style.css">
     <title>To-Do List App</title>
 </head>
 
 <body>
     <h1>To Do</h1>
-    <div>
-        <span id="counter"></span> :To-Dos
-        <button id="sortButton">sort</button>
-    </div>
-    <section id="controlSection">
-        <input id="textInput" type="text" name="todo-text">
-        <select name="prioroty" id="prioritySelector">
+    <div id="containAll">
+        <section id="controlSection">
+            <input id="textInput" type="text" name="todo-text" placeholder="Enter task here...">
+            <select name="prioroty" id="prioritySelector">
+            <option value="" selected disabled>Priority</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
-        <button id="addButton">Add</button>
-    </section>
+            <button id="addButton"><i class="fas fa-plus"></i></button>
+        </section>
 
-    <section id="viewSection">
-        <ul id="todoUl"></ul>
-    </section>
+        <div id="sortAndCountDiv">
+            You have <span id="counter"></span> tasks
+            <button id="sortButton">sort by priority</button>
+        </div>
+
+        <section id="viewSection">
+            <ul id="todoUl">
+                <!-- <li class="priority-3">
+                    <div class="todoContainer">
+                        <span class="todoText">New task</span>
+                        <span class="todoPriority">3</span>
+                        <span class="todoCreatedAt">2020-7-19 18:54:23</span>
+                    </div>
+                </li>
+                <li class="priority-2">
+                    <div class="todoContainer">
+                        <span class="todoText">New task second</span>
+                        <span class="todoPriority">2</span>
+                        <span class="todoCreatedAt">2020-7-19 18:54:23</span>
+                    </div>
+                </li> -->
+            </ul>
+        </section>
+
+
+    </div>
 
     <script src="./main.js"></script>
 </body>

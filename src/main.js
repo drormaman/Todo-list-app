@@ -52,13 +52,16 @@ const addTodoToList = function(event) {
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todoContainer");
 
+    const todoText = document.createElement("span");
+    todoText.classList.add("todoText");
+    todoText.innerText = todoTextInput.value;
+    todoDiv.appendChild(todoText);
+
     const todoPriority = document.createElement("span");
     todoPriority.classList.add("todoPriority");
-    const priority = parseInt(prioritySelector.value);
+    const priority = (prioritySelector.value) ? prioritySelector.value : 1;
     todoPriority.innerText = priority;
     todoDiv.appendChild(todoPriority);
-
-
 
     const todoDateCreated = document.createElement("span");
     todoDateCreated.classList.add("todoCreatedAt");
@@ -66,11 +69,6 @@ const addTodoToList = function(event) {
     const dateStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     todoDateCreated.innerText = dateStr;
     todoDiv.appendChild(todoDateCreated);
-
-    const todoText = document.createElement("span");
-    todoText.classList.add("todoText");
-    todoText.innerText = todoTextInput.value;
-    todoDiv.appendChild(todoText);
 
     todoLi.appendChild(todoDiv);
     todoLi.classList.add(`priority-${priority}`);

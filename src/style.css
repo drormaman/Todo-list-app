@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    background-color: white;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: black;
+}
+
+#containAll {
+    background-color: #FF4800;
+    display: flex;
+    flex-direction: column;
+    min-width: 350px;
+    max-width: 500px;
+    width: 40vw;
+    margin: 10px auto;
+}
+
+#controlSection {
+    padding: 0 10px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+#textInput {
+    background-color: rgba(0, 0, 0, 0);
+    flex-grow: 1;
+    border: none;
+}
+
+#textInput::placeholder {
+    color: rgba(255, 255, 255, 0.7)
+}
+
+#prioritySelector {
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+
+#addButton {
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    font-size: 20px;
+}
+
+#todoUl {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+#todoUl li {
+    height: 35px;
+    display: flex;
+    padding: 0 10px;
+}
+
+#todoUl li:hover .todoPriority {
+    visibility: visible;
+}
+
+.todoContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    line-height: 100%;
+}
+
+.todoPriority {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+#sortAndCountDiv {
+    display: flex;
+    align-items: center;
+    height: 35px;
+    padding: 0 10px;
+}
+
+#counter {
+    margin: 0 5px;
+}
+
+#sortButton {
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: none;
+    margin-left: auto;
+    padding: 0;
+}
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+*/
+
+.priority-1 {
+    background-color: #FFAA00;
+}
+
+.priority-2 {
+    background-color: #FF9E00;
+}
+
+.priority-3 {
+    background-color: #FF9100;
+}
+
+.priority-4 {
+    background-color: #FF8500;
+}
+
+.priority-5 {
+    background-color: #FF7900;
+}
