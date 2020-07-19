@@ -15,11 +15,36 @@ function updateCounter(numOfTodos) {
     todoCounter.innerText = numOfTodos;
 }
 
-const addOrderClass = function() {
+const orderByPriority = function() {
     const todoArr = document.querySelectorAll("#todoUl li");
-    todoArr.forEach(li => {
-        li.classList.toggle("order");
-    });
+    const priority5 = [];
+    const priority4 = [];
+    const priority3 = [];
+    const priority2 = [];
+    const priority1 = [];
+    for (let i = 0; i < todoArr.length; i++) {
+        switch (todoArr[i].className) {
+            case "priority-1":
+                priority1.push(todoArr[i])
+                break;
+            case "priority-2":
+                priority2.push(todoArr[i])
+                break;
+            case "priority-3":
+                priority3.push(todoArr[i])
+                break;
+            case "priority-4":
+                priority4.push(todoArr[i])
+                break;
+            case "priority-5":
+                priority5.push(todoArr[i])
+                break;
+        }
+    }
+    const sortedTodosArr = [...priority5, ...priority4, ...priority3, ...priority2, ...priority1];
+    for (let i = 0; i < sortedTodosArr.length; i++) {
+        todoUl.appendChild(sortedTodosArr[i]);
+    }
 }
 
 const addTodoToList = function(event) {
@@ -29,14 +54,11 @@ const addTodoToList = function(event) {
 
     const todoPriority = document.createElement("span");
     todoPriority.classList.add("todoPriority");
-    const priority = prioritySelector.value;
+    const priority = parseInt(prioritySelector.value);
     todoPriority.innerText = priority;
     todoDiv.appendChild(todoPriority);
 
-    const todoText = document.createElement("span");
-    todoText.classList.add("todoText");
-    todoText.innerText = todoTextInput.value;
-    todoDiv.appendChild(todoText);
+
 
     const todoDateCreated = document.createElement("span");
     todoDateCreated.classList.add("todoCreatedAt");
@@ -44,6 +66,11 @@ const addTodoToList = function(event) {
     const dateStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     todoDateCreated.innerText = dateStr;
     todoDiv.appendChild(todoDateCreated);
+
+    const todoText = document.createElement("span");
+    todoText.classList.add("todoText");
+    todoText.innerText = todoTextInput.value;
+    todoDiv.appendChild(todoText);
 
     todoLi.appendChild(todoDiv);
     todoLi.classList.add(`priority-${priority}`);
@@ -56,4 +83,4 @@ const addTodoToList = function(event) {
 updateCounter(numOfTodos);
 
 addButton.addEventListener('click', addTodoToList);
-sortButton.addEventListener('click', addOrderClass);
+sortButton.addEventListener('click', orderByPriority);
