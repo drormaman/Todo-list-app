@@ -1,4 +1,5 @@
 // DOM variables assignment 
+const controlSection = document.querySelector("#controlSection")
 const todoTextInput = document.querySelector("#textInput");
 const prioritySelector = document.querySelector("#prioritySelector");
 const addButton = document.querySelector("#addButton");
@@ -7,6 +8,9 @@ const todoCounter = document.querySelector("#counter");
 const sortByPriority = document.querySelector("#sortButton");
 const sortByDateAdded = document.querySelector("#sortByDateAdded");
 const deleteCompleted = document.querySelector("#deleteCompleted");
+const searchButton = document.querySelector("#searchButton");
+const searchInput = document.querySelector("#searchInput");
+const clearSearch = document.querySelector("#clearSearch");
 
 // adds the number of tasks to the local storage
 let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
@@ -55,7 +59,7 @@ const orderByPriority = function() {
     while (c < numOfTasks) {
         const task = tasksObj[`task${i}`];
         if (task) {
-            switch (task.charAt(task.indexOf('"priority":') + 12)) {
+            switch (JSON.parse(task)["priority"]) {
                 case '1':
                     priority1.push([`task${i}`, task])
                     break;
@@ -147,21 +151,53 @@ function deleteCompletedTasks() {
     const tasksObj = window.localStorage;
     let i = 1;
     let c = 0;
+    let itemsDeleted = 0;
     while (c < numOfTasks) {
         const task = tasksObj[`task${i}`];
         if (task) {
             if (JSON.parse(task)["completed"]) {
                 document.getElementById(`task${i}`).remove();
                 window.localStorage.removeItem(`task${i}`);
-                numOfTasks--;
-                updateCounter();
+                itemsDeleted++;
             }
             c++;
         }
         i++;
     }
+    numOfTasks -= itemsDeleted;
+    updateCounter();
 }
 
+// add a class of "matchedSearch" to the tasks that matched the search term
+function highlightMatching() {
+    clearMatching()
+    const searchTerm = searchInput.value;
+    const tasksObj = window.localStorage;
+    let i = 1;
+    let c = 0;
+    while (c < numOfTasks) {
+        const taskString = tasksObj[`task${i}`];
+        console.log(taskString);
+        if (taskString) {
+            c++;
+            const task = JSON.parse(taskString);
+            console.log(task);
+            console.log(task["todo-task"]);
+            if (task["todo-task"].indexOf(searchTerm) !== -1) {
+                document.getElementById(`task${i}`).classList.add("matchedSearch");
+            }
+        }
+        i++;
+    }
+}
+
+// remove the "matchedSearch" class from all of the tasks
+function clearMatching() {
+    const matchingTasks = document.querySelectorAll(".matchedSearch");
+    matchingTasks.forEach(task => {
+        task.classList.remove("matchedSearch");
+    });
+}
 
 // adds the task object to the HTML document
 function addTaskToDocument(task) {
@@ -212,17 +248,22 @@ function addTaskToDocument(task) {
 }
 
 addButton.addEventListener('click', event => {
-    if (todoTextInput !== "") {
+    if (todoTextInput.value !== "") {
         addTodoToList();
     }
 });
-document.addEventListener('keydown', event => {
-    if (event.which === 13 && todoTextInput !== "") {
+controlSection.addEventListener('keydown', event => {
+    if (event.which === 13 && todoTextInput.value !== "") {
         addTodoToList();
     }
 });
 sortByPriority.addEventListener('click', orderByPriority);
 sortByDateAdded.addEventListener('click', orderByTimeAdded);
 deleteCompleted.addEventListener('click', deleteCompletedTasks);
+searchButton.addEventListener('click', highlightMatching);
+clearSearch.addEventListener('click', () => {
+    clearMatching();
+    searchInput.value = "";
+});
 window.addEventListener('load', orderByTimeAdded);
 updateCounter();
