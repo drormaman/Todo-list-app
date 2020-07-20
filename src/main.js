@@ -14,14 +14,9 @@ const clearSearch = document.querySelector("#clearSearch");
 
 
 //dragging functions START
-
-// The current dragging item
 let draggedLi;
-
-// The current position of mouse relative to the dragging element
 let x = 0;
 let y = 0;
-
 let placeholder;
 let isDraggingStarted = false;
 
@@ -50,7 +45,6 @@ const mouseDownHandler = function(event) {
     document.addEventListener('mouseup', mouseUpHandler);
 };
 
-
 const mouseMoveHandler = function(e) {
     const draggingRect = draggedLi.getBoundingClientRect();
     if (!isDraggingStarted) {
@@ -64,7 +58,6 @@ const mouseMoveHandler = function(e) {
     draggedLi.style.position = 'absolute';
     draggedLi.style.top = `${event.pageY - y}px`;
     draggedLi.style.left = `${event.pageX - x}px`;
-
     const prevEle = draggedLi.previousElementSibling;
     const nextEle = placeholder.nextElementSibling;
     // User moves item to the top
@@ -91,7 +84,6 @@ const mouseUpHandler = function() {
     document.removeEventListener('mousemove', mouseMoveHandler);
     document.removeEventListener('mouseup', mouseUpHandler);
 };
-
 //draging functions END
 
 // adds the number of tasks to the local storage
@@ -259,12 +251,9 @@ function highlightMatching() {
     let c = 0;
     while (c < numOfTasks) {
         const taskString = tasksObj[`task${i}`];
-        console.log(taskString);
         if (taskString) {
             c++;
             const task = JSON.parse(taskString);
-            console.log(task);
-            console.log(task["todo-task"]);
             if (task["todo-task"].indexOf(searchTerm) !== -1) {
                 document.getElementById(`task${i}`).classList.add("matchedSearch");
             }
