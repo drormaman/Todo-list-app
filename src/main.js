@@ -6,6 +6,7 @@ const todoUl = document.querySelector("#todoUl");
 const todoCounter = document.querySelector("#counter");
 const sortByPriority = document.querySelector("#sortButton");
 const sortByDateAdded = document.querySelector("#sortByDateAdded");
+const deleteCompleted = document.querySelector("#deleteCompleted");
 
 // adds the number of tasks to the local storage
 let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
@@ -141,11 +142,31 @@ function toggleTaskCompleted(event) {
     window.localStorage.setItem(taskLi.id, JSON.stringify(taskObj))
 }
 
+// deletes all the completed tasks
+function deleteCompletedTasks() {
+    const tasksObj = window.localStorage;
+    let i = 1;
+    let c = 0;
+    while (c < numOfTasks) {
+        const task = tasksObj[`task${i}`];
+        if (task) {
+            if (JSON.parse(task)["completed"]) {
+                document.getElementById(`task${i}`).remove();
+                window.localStorage.removeItem(`task${i}`);
+                numOfTasks--;
+                updateCounter();
+            }
+            c++;
+        }
+        i++;
+    }
+}
+
+
 // adds the task object to the HTML document
 function addTaskToDocument(task) {
     const taskObj = task[1];
     const taskKey = task[0];
-    console.log(taskObj);
     const todoLi = document.createElement("li");
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todoContainer");
@@ -191,16 +212,17 @@ function addTaskToDocument(task) {
 }
 
 addButton.addEventListener('click', event => {
-    if (event.target.value !== "") {
+    if (todoTextInput !== "") {
         addTodoToList();
     }
 });
-todoTextInput.addEventListener('keydown', event => {
-    if (event.which === 13 && event.target.value !== "") {
+document.addEventListener('keydown', event => {
+    if (event.which === 13 && todoTextInput !== "") {
         addTodoToList();
     }
 });
 sortByPriority.addEventListener('click', orderByPriority);
 sortByDateAdded.addEventListener('click', orderByTimeAdded);
+deleteCompleted.addEventListener('click', deleteCompletedTasks);
 window.addEventListener('load', orderByTimeAdded);
 updateCounter();
