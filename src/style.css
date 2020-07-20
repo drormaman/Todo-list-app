@@ -2,7 +2,7 @@
 
 body {
     margin: 0;
-    background-color: white;
+    background-color: #03071e;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -26,21 +26,22 @@ h1 {
 /* main div */
 
 #containAll {
-    border: 5px solid #FF4800;
+    border: 5px solid #FFAA00;
     display: flex;
     flex-direction: column;
     min-width: 350px;
     max-width: 500px;
     width: 40vw;
     margin: 10px auto;
-    box-shadow: 0 0 15px -2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 20px -2px rgba(200, 200, 200, 0.8);
+    border-radius: 5px;
 }
 
 
 /* top bar */
 
 #controlSection {
-    background-color: #FF4800;
+    background-color: #FFAA00;
     padding: 0 10px;
     height: 35px;
     display: flex;
@@ -51,63 +52,88 @@ h1 {
     background-color: rgba(0, 0, 0, 0);
     flex-grow: 1;
     font-size: 20px;
-    color: white;
+    color: #03071e;
     border: none;
     outline: none;
 }
 
 #textInput::placeholder {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(3, 7, 30, 0.5);
 }
 
 #prioritySelector {
-    color: rgba(255, 255, 255, 0.8);
+    color: #03071e;
     background-color: rgba(0, 0, 0, 0);
     border: none;
     margin: 20px;
+    font-size: 16px;
+}
+
+#prioritySelector:hover {
+    color: white;
 }
 
 #addButton {
-    color: white;
+    color: #03071e;
     background-color: rgba(0, 0, 0, 0);
     border: none;
     font-size: 20px;
     padding: 0;
 }
 
+#addButton:hover {
+    color: white;
+}
+
 
 /* second bar */
 
 #sortAndCountDiv {
-    background-color: #FF6000;
+    background-color: #FFAA00;
     display: flex;
     align-items: center;
     height: 35px;
     padding: 0 10px;
+    font-size: 14px;
+    color: #03071e;
 }
 
 #counter {
+    font-size: 14px;
+    color: #03071e;
     margin: 0 5px;
 }
 
 #sortButton {
     background-color: rgba(0, 0, 0, 0);
-    color: white;
+    color: #03071e;
     border: none;
     margin-left: 5px;
     padding: 0;
+    font-size: 14px;
+}
+
+#sortButton:hover {
+    color: white;
 }
 
 #sortByDateAdded {
     background-color: rgba(0, 0, 0, 0);
-    color: white;
+    color: #03071e;
     border: none;
     margin-left: 5px;
     padding: 0;
+    font-size: 14px;
+}
+
+#sortByDateAdded:hover {
+    color: white;
 }
 
 #sortBySpan {
+    color: #03071e;
     margin-left: auto;
+    font-size: 14px;
 }
 
 
@@ -125,14 +151,26 @@ h1 {
     display: flex;
 }
 
+#todoUl li:hover .todoContainer {
+    /* box-shadow: 0px 0px 10px -5px rgba(0, 0, 0, 0.75); */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.75);
+}
+
 #todoUl li:hover .deleteBtn {
     width: 35px;
-    height: 35px;
 }
 
 #todoUl li:hover .deleteBtn i {
     width: 35px;
-    height: 25px;
+    font-size: 14px;
+}
+
+#todoUl li:hover .completeBtn {
+    width: 35px;
+}
+
+#todoUl li:hover .completeBtn i {
+    width: 35px;
     font-size: 14px;
 }
 
@@ -153,38 +191,67 @@ h1 {
     background-color: rgba(0, 0, 0, 0);
     padding: 0;
     width: 0;
-    height: 0;
+    height: 35px;
     border: none;
+    transition: width 0.3s ease-in-out;
 }
 
 .deleteBtn i {
-    background-color: red;
-    color: white;
-    height: 0;
+    background-color: #FFAA00;
+    color: #FF4800;
+    height: 25px;
     width: 0;
     font-size: 0px;
-    padding-top: 10px
+    padding-top: 11px;
+    transition: width 0.3s ease-in-out;
+}
+
+.completeBtn {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0;
+    width: 0;
+    height: 35px;
+    border: none;
+    transition: width 0.3s ease-in-out;
+}
+
+.completeBtn i {
+    background-color: #FFAA00;
+    color: #4f772d;
+    height: 25px;
+    width: 0;
+    font-size: 0px;
+    padding-top: 11px;
+    transition: width 0.3s ease-in-out;
 }
 
 
 /* priority design */
 
 .priority-1 {
-    background-color: #FFAA00;
-}
-
-.priority-2 {
-    background-color: #FF9E00;
-}
-
-.priority-3 {
-    background-color: #FF9100;
-}
-
-.priority-4 {
     background-color: #FF8500;
 }
 
-.priority-5 {
+.priority-2 {
     background-color: #FF7900;
+}
+
+.priority-3 {
+    background-color: #FF6D00;
+}
+
+.priority-4 {
+    background-color: #FF6000;
+}
+
+.priority-5 {
+    background-color: #FF5400;
+    font-weight: 600;
+}
+
+.completed {
+    text-decoration: line-through;
+    background-color: #4f772d;
+    font-weight: 400;
+    color: black;
 }

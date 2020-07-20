@@ -109,13 +109,14 @@ const addTodoToList = function() {
 }
 
 // creates the task object and adding the task to the local storage
-function createTaskObj(text, priority, createDate) {
+function createTaskObj(text, priority, createDate, completed = false) {
     numOfTasks++;
     updateCounter();
     const task = {
         "todo-task": text,
         "priority": priority,
-        "created-at": createDate
+        "created-at": createDate,
+        "completed": completed
     };
     const taskKey = `task${nextTaskNum++}`;
     window.localStorage.setItem(taskKey, JSON.stringify(task));
@@ -131,10 +132,20 @@ function deleteTask(event) {
     updateCounter();
 }
 
+// toggle task if completed (on and off)
+function toggleTaskCompleted(event) {
+    const taskLi = event.target.parentNode.parentNode;
+    taskLi.classList.toggle('completed');
+    const taskObj = JSON.parse(window.localStorage.getItem(taskLi.id));
+    taskObj["completed"] = !taskObj["completed"];
+    window.localStorage.setItem(taskLi.id, JSON.stringify(taskObj))
+}
+
 // adds the task object to the HTML document
 function addTaskToDocument(task) {
     const taskObj = task[1];
     const taskKey = task[0];
+    console.log(taskObj);
     const todoLi = document.createElement("li");
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todoContainer");
@@ -166,6 +177,16 @@ function addTaskToDocument(task) {
     deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
     deleteBtn.addEventListener('click', deleteTask);
     todoLi.prepend(deleteBtn);
+
+    if (taskObj["completed"]) {
+        todoLi.classList.add('completed');
+    }
+
+    const completeBtn = document.createElement("button");
+    completeBtn.classList.add("completeBtn");
+    completeBtn.innerHTML = '<i class="fas fa-check"></i>';
+    completeBtn.addEventListener('click', toggleTaskCompleted);
+    todoLi.prepend(completeBtn);
     todoUl.appendChild(todoLi);
 }
 
