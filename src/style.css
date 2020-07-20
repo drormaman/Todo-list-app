@@ -123,11 +123,17 @@ h1 {
 #todoUl li {
     height: 35px;
     display: flex;
-    padding: 0 10px;
 }
 
-#todoUl li:hover {
-    visibility: visible;
+#todoUl li:hover .deleteBtn {
+    width: 35px;
+    height: 35px;
+}
+
+#todoUl li:hover .deleteBtn i {
+    width: 35px;
+    height: 25px;
+    font-size: 14px;
 }
 
 .todoContainer {
@@ -135,11 +141,29 @@ h1 {
     align-items: center;
     width: 100%;
     line-height: 100%;
+    padding: 0 10px;
 }
 
 .todoPriority {
     margin-left: auto;
     margin-right: 20px;
+}
+
+.deleteBtn {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0;
+    width: 0;
+    height: 0;
+    border: none;
+}
+
+.deleteBtn i {
+    background-color: red;
+    color: white;
+    height: 0;
+    width: 0;
+    font-size: 0px;
+    padding-top: 10px
 }
 
 

@@ -11,6 +11,16 @@ const sortByDateAdded = document.querySelector("#sortByDateAdded");
 let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
 window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
 
+let i = 1;
+let c = 0;
+while (c < numOfTasks) {
+    if (window.localStorage.getItem(`task${i}`)) {
+        c++;
+    }
+    i++;
+}
+let nextTaskNum = i;
+
 //sets input to default
 function resetInput() {
     todoTextInput.value = "";
@@ -22,7 +32,6 @@ function resetInput() {
 function updateCounter() {
     todoCounter.innerText = numOfTasks;
     window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
-    numOfTasks++;
 }
 
 // format from Javascript date to SQL date format, counts for time zone difference
@@ -40,38 +49,50 @@ const orderByPriority = function() {
     const priority3 = [];
     const priority2 = [];
     const priority1 = [];
-    for (let i = 1; i < numOfTasks; i++) {
+    let i = 1;
+    let c = 0;
+    while (c < numOfTasks) {
         const task = tasksObj[`task${i}`];
-        switch (task.charAt(task.indexOf('"priority":') + 12)) {
-            case '1':
-                priority1.push(task)
-                break;
-            case '2':
-                priority2.push(task)
-                break;
-            case '3':
-                priority3.push(task)
-                break;
-            case '4':
-                priority4.push(task)
-                break;
-            case '5':
-                priority5.push(task)
-                break;
+        if (task) {
+            switch (task.charAt(task.indexOf('"priority":') + 12)) {
+                case '1':
+                    priority1.push([`task${i}`, task])
+                    break;
+                case '2':
+                    priority2.push([`task${i}`, task])
+                    break;
+                case '3':
+                    priority3.push([`task${i}`, task])
+                    break;
+                case '4':
+                    priority4.push([`task${i}`, task])
+                    break;
+                case '5':
+                    priority5.push([`task${i}`, task])
+                    break;
+            }
+            c++;
         }
+        i++;
     }
     const sortedTodosArr = [...priority5, ...priority4, ...priority3, ...priority2, ...priority1];
     todoUl.innerHTML = "";
     for (let i = 0; i < sortedTodosArr.length; i++) {
-        addTaskToDocument(JSON.parse(sortedTodosArr[i]));
+        addTaskToDocument([sortedTodosArr[i][0], JSON.parse(sortedTodosArr[i][1])]);
     }
 }
 
 // order by date added (by using task number on local storage)
 const orderByTimeAdded = function() {
     todoUl.innerHTML = "";
-    for (let i = 1; i < numOfTasks; i++) {
-        addTaskToDocument(JSON.parse(window.localStorage.getItem(`task${i}`)));
+    let i = 1;
+    let c = 0;
+    while (c < numOfTasks) {
+        if (window.localStorage.getItem(`task${i}`)) {
+            addTaskToDocument([`task${i}`, JSON.parse(window.localStorage.getItem(`task${i}`))]);
+            c++;
+        }
+        i++;
     }
 }
 
@@ -82,25 +103,38 @@ const addTodoToList = function() {
     const todoTextValue = todoTextInput.value;
     const priorityValue = (prioritySelector.value) ? prioritySelector.value : "1";
     const date = formatDate(new Date());
-    const taskObj = createTaskObj(todoTextValue, priorityValue, date);
-    addTaskToDocument(taskObj)
+    const task = createTaskObj(todoTextValue, priorityValue, date);
+    addTaskToDocument(task)
     resetInput();
 }
 
 // creates the task object and adding the task to the local storage
 function createTaskObj(text, priority, createDate) {
+    numOfTasks++;
     updateCounter();
     const task = {
         "todo-task": text,
         "priority": priority,
         "created-at": createDate
     };
-    window.localStorage.setItem(`task${parseInt(window.localStorage.getItem("num-of-tasks"))}`, JSON.stringify(task));
-    return task;
+    const taskKey = `task${nextTaskNum++}`;
+    window.localStorage.setItem(taskKey, JSON.stringify(task));
+    return [taskKey, task];
+}
+
+// delete a task from the document and from the local storage
+function deleteTask(event) {
+    const taskLi = event.target.parentNode.parentNode;
+    window.localStorage.removeItem(taskLi.id);
+    taskLi.remove();
+    numOfTasks--;
+    updateCounter();
 }
 
 // adds the task object to the HTML document
-function addTaskToDocument(taskObj) {
+function addTaskToDocument(task) {
+    const taskObj = task[1];
+    const taskKey = task[0];
     const todoLi = document.createElement("li");
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todoContainer");
@@ -123,6 +157,15 @@ function addTaskToDocument(taskObj) {
     todoLi.appendChild(todoDiv);
     //adding a class by priority number
     todoLi.classList.add(`priority-${taskObj["priority"]}`);
+    //adding an id to the li that matches the local storage key
+    todoLi.id = taskKey;
+
+    // adding a delete button to each task
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("deleteBtn");
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBtn.addEventListener('click', deleteTask);
+    todoLi.prepend(deleteBtn);
     todoUl.appendChild(todoLi);
 }
 
