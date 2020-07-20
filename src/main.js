@@ -11,7 +11,19 @@ const deleteCompleted = document.querySelector("#deleteCompleted");
 const searchButton = document.querySelector("#searchButton");
 const searchInput = document.querySelector("#searchInput");
 const clearSearch = document.querySelector("#clearSearch");
+// adds the number of tasks to the local storage
+let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
+window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
 
+let i = 1;
+let c = 0;
+while (c < numOfTasks) {
+    if (window.localStorage.getItem(`task${i}`)) {
+        c++;
+    }
+    i++;
+}
+let nextTaskNum = i;
 
 //dragging functions START
 let draggedLi;
@@ -86,38 +98,18 @@ const mouseUpHandler = function() {
 };
 //draging functions END
 
-// adds the number of tasks to the local storage
-let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
-window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
-
-let i = 1;
-let c = 0;
-while (c < numOfTasks) {
-    if (window.localStorage.getItem(`task${i}`)) {
-        c++;
+// order by date added (by using task number on local storage)
+const orderByTimeAdded = function() {
+    todoUl.innerHTML = "";
+    let i = 1;
+    let c = 0;
+    while (c < numOfTasks) {
+        if (window.localStorage.getItem(`task${i}`)) {
+            addTaskToDocument([`task${i}`, JSON.parse(window.localStorage.getItem(`task${i}`))]);
+            c++;
+        }
+        i++;
     }
-    i++;
-}
-let nextTaskNum = i;
-
-//sets input to default
-function resetInput() {
-    todoTextInput.value = "";
-    prioritySelector.value = "";
-    todoTextInput.focus();
-}
-
-// updates number of tasks in the local storage and display in the span
-function updateCounter() {
-    todoCounter.innerText = numOfTasks;
-    window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
-}
-
-// format from Javascript date to SQL date format, counts for time zone difference
-function formatDate(date) {
-    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
-    const formattedDate = new Date(date - timezoneOffset).toISOString().slice(0, 19).replace('T', ' ');
-    return formattedDate;
 }
 
 // order list by priority
@@ -161,18 +153,59 @@ const orderByPriority = function() {
     }
 }
 
-// order by date added (by using task number on local storage)
-const orderByTimeAdded = function() {
-    todoUl.innerHTML = "";
-    let i = 1;
-    let c = 0;
-    while (c < numOfTasks) {
-        if (window.localStorage.getItem(`task${i}`)) {
-            addTaskToDocument([`task${i}`, JSON.parse(window.localStorage.getItem(`task${i}`))]);
-            c++;
-        }
-        i++;
+// adds the task object to the HTML document
+function addTaskToDocument(task) {
+    const taskObj = task[1];
+    const taskKey = task[0];
+    const todoLi = document.createElement("li");
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todoContainer");
+    // todo text
+    const todoText = document.createElement("span");
+    todoText.classList.add("todoText");
+    todoText.innerText = taskObj["todo-task"];
+    todoDiv.appendChild(todoText);
+    // todo priority
+    const todoPriority = document.createElement("span");
+    todoPriority.classList.add("todoPriority");
+    todoPriority.innerText = taskObj["priority"];
+    todoDiv.appendChild(todoPriority);
+    // todo time created
+    const todoDateCreated = document.createElement("span");
+    todoDateCreated.classList.add("todoCreatedAt");
+    todoDateCreated.innerText = taskObj["created-at"];
+    todoDiv.appendChild(todoDateCreated);
+    todoLi.appendChild(todoDiv);
+    //adding a class by priority number
+    todoLi.classList.add(`priority-${taskObj["priority"]}`);
+    //adding an id to the li that matches the local storage key
+    todoLi.id = taskKey;
+
+    // adding a delete button to each task
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("deleteBtn");
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBtn.addEventListener('click', deleteTask);
+    todoLi.prepend(deleteBtn);
+
+    if (taskObj["completed"]) {
+        todoLi.classList.add('completed');
     }
+
+    // adding a complete button to each task
+    const completeBtn = document.createElement("button");
+    completeBtn.classList.add("completeBtn");
+    completeBtn.innerHTML = '<i class="fas fa-check"></i>';
+    completeBtn.addEventListener('click', toggleTaskCompleted);
+    todoLi.prepend(completeBtn);
+
+    // adding a drag button to each task
+    const orderBtn = document.createElement("button");
+    orderBtn.classList.add("orderBtn");
+    orderBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    orderBtn.addEventListener('mousedown', mouseDownHandler);
+    todoLi.prepend(orderBtn);
+    todoUl.appendChild(todoLi);
 }
 
 // gets the input from the user and sends the data to create a task object
@@ -200,6 +233,26 @@ function createTaskObj(text, priority, createDate, completed = false) {
     const taskKey = `task${nextTaskNum++}`;
     window.localStorage.setItem(taskKey, JSON.stringify(task));
     return [taskKey, task];
+}
+
+//sets input to default
+function resetInput() {
+    todoTextInput.value = "";
+    prioritySelector.value = "";
+    todoTextInput.focus();
+}
+
+// updates number of tasks in the local storage and display in the span
+function updateCounter() {
+    todoCounter.innerText = numOfTasks;
+    window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
+}
+
+// format from Javascript date to SQL date format, counts for time zone difference
+function formatDate(date) {
+    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+    const formattedDate = new Date(date - timezoneOffset).toISOString().slice(0, 19).replace('T', ' ');
+    return formattedDate;
 }
 
 // delete a task from the document and from the local storage
@@ -270,88 +323,42 @@ function clearMatching() {
     });
 }
 
-// adds the task object to the HTML document
-function addTaskToDocument(task) {
-    const taskObj = task[1];
-    const taskKey = task[0];
-    const todoLi = document.createElement("li");
-    const todoDiv = document.createElement("div");
-    todoDiv.classList.add("todoContainer");
-    // todo text
-    const todoText = document.createElement("span");
-    todoText.classList.add("todoText");
-    todoText.innerText = taskObj["todo-task"];
-    todoDiv.appendChild(todoText);
-    // todo priority
-    const todoPriority = document.createElement("span");
-    todoPriority.classList.add("todoPriority");
-    todoPriority.innerText = taskObj["priority"];
-    todoDiv.appendChild(todoPriority);
-    // todo time created
-    const todoDateCreated = document.createElement("span");
-    todoDateCreated.classList.add("todoCreatedAt");
-    todoDateCreated.innerText = taskObj["created-at"];
-    todoDiv.appendChild(todoDateCreated);
-
-    todoLi.appendChild(todoDiv);
-    //adding a class by priority number
-    todoLi.classList.add(`priority-${taskObj["priority"]}`);
-    //adding an id to the li that matches the local storage key
-    todoLi.id = taskKey;
-
-    // adding a delete button to each task
-    const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("deleteBtn");
-    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-    deleteBtn.addEventListener('click', deleteTask);
-    todoLi.prepend(deleteBtn);
-
-    if (taskObj["completed"]) {
-        todoLi.classList.add('completed');
-    }
-
-    const completeBtn = document.createElement("button");
-    completeBtn.classList.add("completeBtn");
-    completeBtn.innerHTML = '<i class="fas fa-check"></i>';
-    completeBtn.addEventListener('click', toggleTaskCompleted);
-    todoLi.prepend(completeBtn);
-
-    //dragging
-    const orderBtn = document.createElement("button");
-    orderBtn.classList.add("orderBtn");
-    orderBtn.innerHTML = '<i class="fas fa-bars"></i>';
-    orderBtn.addEventListener('mousedown', mouseDownHandler);
-    todoLi.prepend(orderBtn);
-
-    todoUl.appendChild(todoLi);
-}
-
+// event listeners
+// add task on add button
 addButton.addEventListener('click', () => {
     if (todoTextInput.value !== "") {
         addTodoToList();
     }
 });
+// add task on enter key
 controlSection.addEventListener('keydown', event => {
     if (event.which === 13 && todoTextInput.value !== "") {
         addTodoToList();
     }
 });
+// sort tasks by priority
 sortByPriority.addEventListener('click', orderByPriority);
+// sort tasks by time created
 sortByDateAdded.addEventListener('click', orderByTimeAdded);
+// delete all completed tasks on button click
 deleteCompleted.addEventListener('click', deleteCompletedTasks);
+// perform a search on search button click
 searchButton.addEventListener('click', () => {
     if (searchInput.value !== "") {
         highlightMatching();
     }
 });
+// perform search on enter key
 searchInput.addEventListener('keydown', event => {
     if (event.which === 13 && searchInput.value !== "") {
         highlightMatching();
     }
 });
+// clear search box and matching item
 clearSearch.addEventListener('click', () => {
     clearMatching();
     searchInput.value = "";
 });
+// load all the tasks that are saved on local storage on page load
 window.addEventListener('load', orderByTimeAdded);
 updateCounter();
