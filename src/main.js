@@ -190,7 +190,16 @@ function addTaskToDocument(task) {
     todoUl.appendChild(todoLi);
 }
 
-addButton.addEventListener('click', addTodoToList);
+addButton.addEventListener('click', event => {
+    if (event.target.value !== "") {
+        addTodoToList();
+    }
+});
+todoTextInput.addEventListener('keydown', event => {
+    if (event.which === 13 && event.target.value !== "") {
+        addTodoToList();
+    }
+});
 sortByPriority.addEventListener('click', orderByPriority);
 sortByDateAdded.addEventListener('click', orderByTimeAdded);
 window.addEventListener('load', orderByTimeAdded);
