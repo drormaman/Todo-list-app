@@ -285,7 +285,7 @@ h1 {
     text-decoration: line-through;
     background-color: #4f772d;
     font-weight: 400;
-    color: black;
+    color: rgba(200, 200, 200, 0.7);
 }
 
 .matchedSearch {

@@ -337,7 +337,7 @@ function addTaskToDocument(task) {
     todoUl.appendChild(todoLi);
 }
 
-addButton.addEventListener('click', event => {
+addButton.addEventListener('click', () => {
     if (todoTextInput.value !== "") {
         addTodoToList();
     }
@@ -350,7 +350,16 @@ controlSection.addEventListener('keydown', event => {
 sortByPriority.addEventListener('click', orderByPriority);
 sortByDateAdded.addEventListener('click', orderByTimeAdded);
 deleteCompleted.addEventListener('click', deleteCompletedTasks);
-searchButton.addEventListener('click', highlightMatching);
+searchButton.addEventListener('click', () => {
+    if (searchInput.value !== "") {
+        highlightMatching();
+    }
+});
+searchInput.addEventListener('keydown', event => {
+    if (event.which === 13 && searchInput.value !== "") {
+        highlightMatching();
+    }
+});
 clearSearch.addEventListener('click', () => {
     clearMatching();
     searchInput.value = "";
