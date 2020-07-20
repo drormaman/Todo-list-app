@@ -12,6 +12,88 @@ const searchButton = document.querySelector("#searchButton");
 const searchInput = document.querySelector("#searchInput");
 const clearSearch = document.querySelector("#clearSearch");
 
+
+//dragging functions START
+
+// The current dragging item
+let draggedLi;
+
+// The current position of mouse relative to the dragging element
+let x = 0;
+let y = 0;
+
+let placeholder;
+let isDraggingStarted = false;
+
+const isAbove = function(nodeA, nodeB) {
+    // Get the bounding rectangle of nodes
+    const rectA = nodeA.getBoundingClientRect();
+    const rectB = nodeB.getBoundingClientRect();
+    return (rectA.top + rectA.height / 2 < rectB.top + rectB.height / 2);
+};
+
+const swap = function(nodeA, nodeB) {
+    const parentA = nodeA.parentNode;
+    const siblingA = nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
+    // Move `nodeA` to before the `nodeB`
+    nodeB.parentNode.insertBefore(nodeA, nodeB);
+    // Move `nodeB` to before the sibling of `nodeA`
+    parentA.insertBefore(nodeB, siblingA);
+};
+
+const mouseDownHandler = function(event) {
+    draggedLi = event.target.parentNode.parentNode;
+    const rect = draggedLi.getBoundingClientRect();
+    x = event.pageX - rect.left;
+    y = event.pageY - rect.top;
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+};
+
+
+const mouseMoveHandler = function(e) {
+    const draggingRect = draggedLi.getBoundingClientRect();
+    if (!isDraggingStarted) {
+        isDraggingStarted = true;
+        placeholder = document.createElement('div');
+        placeholder.classList.add('placeholder');
+        draggedLi.parentNode.insertBefore(placeholder, draggedLi.nextSibling);
+        placeholder.style.height = `${draggingRect.height}px`;
+    }
+    // Set position for dragging element
+    draggedLi.style.position = 'absolute';
+    draggedLi.style.top = `${event.pageY - y}px`;
+    draggedLi.style.left = `${event.pageX - x}px`;
+
+    const prevEle = draggedLi.previousElementSibling;
+    const nextEle = placeholder.nextElementSibling;
+    // User moves item to the top
+    if (prevEle && isAbove(draggedLi, prevEle)) {
+        swap(placeholder, draggedLi);
+        swap(placeholder, prevEle);
+    }
+    // User moves the dragging element to the bottom
+    if (nextEle && isAbove(nextEle, draggedLi)) {
+        swap(nextEle, placeholder);
+        swap(nextEle, draggedLi);
+    }
+};
+
+const mouseUpHandler = function() {
+    placeholder.remove();
+    isDraggingStarted = false;
+    draggedLi.style.removeProperty('top');
+    draggedLi.style.removeProperty('left');
+    draggedLi.style.removeProperty('position');
+    x = null;
+    y = null;
+    draggedLi = null;
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+};
+
+//draging functions END
+
 // adds the number of tasks to the local storage
 let numOfTasks = window.localStorage.length > 0 ? window.localStorage.length - 1 : 0;
 window.localStorage.setItem("num-of-tasks", `${numOfTasks}`);
@@ -244,6 +326,14 @@ function addTaskToDocument(task) {
     completeBtn.innerHTML = '<i class="fas fa-check"></i>';
     completeBtn.addEventListener('click', toggleTaskCompleted);
     todoLi.prepend(completeBtn);
+
+    //dragging
+    const orderBtn = document.createElement("button");
+    orderBtn.classList.add("orderBtn");
+    orderBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    orderBtn.addEventListener('mousedown', mouseDownHandler);
+    todoLi.prepend(orderBtn);
+
     todoUl.appendChild(todoLi);
 }
 

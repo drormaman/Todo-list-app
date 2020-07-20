@@ -14,8 +14,8 @@ select {
 }
 
 h1 {
-    min-width: 350px;
-    max-width: 500px;
+    min-width: 400px;
+    max-width: 550px;
     width: 40vw;
     margin: 50px auto 50px auto;
     text-align: left;
@@ -31,8 +31,8 @@ h1 {
     border: 5px solid #FFAA00;
     display: flex;
     flex-direction: column;
-    min-width: 350px;
-    max-width: 500px;
+    min-width: 400px;
+    max-width: 550px;
     width: 40vw;
     margin: 10px auto;
     box-shadow: 0 0 20px -2px rgba(200, 200, 200, 0.8);
@@ -169,6 +169,7 @@ h1 {
 /* todos list */
 
 #todoUl {
+    background-color: #FFAA00;
     list-style-type: none;
     padding-left: 0;
     margin-bottom: 0;
@@ -180,27 +181,26 @@ h1 {
 #todoUl li {
     height: 35px;
     display: flex;
+    min-width: 400px;
+    max-width: 550px;
+    width: 40vw;
+    user-select: none;
 }
 
 #todoUl li:hover .todoContainer {
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.75);
 }
 
-#todoUl li:hover .deleteBtn {
-    width: 35px;
+#todoUl li:hover .deleteBtn,
+#todoUl li:hover .completeBtn,
+#todoUl li:hover .orderBtn {
+    width: 25px;
 }
 
-#todoUl li:hover .deleteBtn i {
-    width: 35px;
-    font-size: 14px;
-}
-
-#todoUl li:hover .completeBtn {
-    width: 35px;
-}
-
-#todoUl li:hover .completeBtn i {
-    width: 35px;
+#todoUl li:hover .deleteBtn i,
+#todoUl li:hover .completeBtn i,
+#todoUl li:hover .orderBtn i {
+    width: 25px;
     font-size: 14px;
 }
 
@@ -217,42 +217,44 @@ h1 {
     margin-right: 20px;
 }
 
-.deleteBtn {
+.deleteBtn,
+.completeBtn,
+.orderBtn {
     background-color: rgba(0, 0, 0, 0);
     padding: 0;
     width: 0;
     height: 35px;
     border: none;
     transition: width 0.3s ease-in-out;
+    transition-delay: 0.3s;
+}
+
+.deleteBtn i,
+.completeBtn i,
+.orderBtn i {
+    background-color: #FFAA00;
+    height: 25px;
+    width: 0;
+    font-size: 0px;
+    padding-top: 11px;
+    transition: width, font-size 0.3s ease-in-out;
+    transition-delay: 0.3s;
+}
+
+.orderBtn {
+    cursor: move;
 }
 
 .deleteBtn i {
-    background-color: #FFAA00;
     color: #FF4800;
-    height: 25px;
-    width: 0;
-    font-size: 0px;
-    padding-top: 11px;
-    transition: width 0.3s ease-in-out;
-}
-
-.completeBtn {
-    background-color: rgba(0, 0, 0, 0);
-    padding: 0;
-    width: 0;
-    height: 35px;
-    border: none;
-    transition: width 0.3s ease-in-out;
 }
 
 .completeBtn i {
-    background-color: #FFAA00;
     color: #4f772d;
-    height: 25px;
-    width: 0;
-    font-size: 0px;
-    padding-top: 11px;
-    transition: width 0.3s ease-in-out;
+}
+
+.orderBtn i {
+    color: black;
 }
 
 
