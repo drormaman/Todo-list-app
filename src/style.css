@@ -1,0 +1,304 @@
+/* general */
+
+body {
+    margin: 0;
+    background-color: #03071e;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+select {
+    outline: none;
+    cursor: pointer;
+}
+
+
+/* head */
+
+h1 {
+    min-width: 400px;
+    max-width: 550px;
+    width: 40vw;
+    margin: 50px auto 50px auto;
+    text-align: left;
+    color: white;
+    font-size: 48px;
+    font-weight: 400;
+}
+
+h1 i {
+    margin-right: 20px;
+}
+
+
+/* main div */
+
+#containAll {
+    border: 5px solid #FFAA00;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    max-width: 550px;
+    width: 40vw;
+    margin: 10px auto;
+    box-shadow: 0 0 20px -2px rgba(200, 200, 200, 0.8);
+    border-radius: 5px;
+}
+
+
+/* top bar */
+
+#controlSection {
+    background-color: #FFAA00;
+    padding: 0 10px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+#textInput {
+    background-color: rgba(0, 0, 0, 0);
+    flex-grow: 1;
+    font-size: 20px;
+    color: #03071e;
+    border: none;
+    outline: none;
+}
+
+#textInput::placeholder {
+    color: rgba(3, 7, 30, 0.5);
+}
+
+#prioritySelector {
+    color: #03071e;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    margin: 20px;
+    font-size: 16px;
+}
+
+#prioritySelector:hover {
+    color: white;
+}
+
+#addButton {
+    color: #03071e;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    font-size: 20px;
+    padding: 0;
+}
+
+#addButton:hover {
+    color: white;
+}
+
+
+/* second bar */
+
+.settingsDiv {
+    background-color: #FFAA00;
+    display: flex;
+    align-items: center;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 14px;
+    color: #03071e;
+}
+
+#counter {
+    font-size: 14px;
+    color: #03071e;
+    margin: 0 5px;
+}
+
+#sortButton,
+#sortByDateAdded,
+#deleteCompleted {
+    background-color: rgba(0, 0, 0, 0);
+    color: #03071e;
+    border: none;
+    margin-left: 5px;
+    padding: 0;
+    font-size: 14px;
+}
+
+#sortButton:hover,
+#sortByDateAdded:hover,
+#deleteCompleted:hover {
+    color: white;
+}
+
+#sortBySpan {
+    color: #03071e;
+    margin-left: auto;
+    font-size: 14px;
+}
+
+#deleteCompleted {
+    margin-left: auto;
+}
+
+#searchInput {
+    background-color: #c67b00;
+    outline: none;
+    border: none;
+    height: 20px;
+    color: white;
+    font-size: 14px;
+    border-radius: 4px 0 0 4px;
+}
+
+#searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#searchButton,
+#clearSearch {
+    background-color: #c67b00;
+    outline: none;
+    border: none;
+    height: 22px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#searchButton:hover,
+#clearSearch:hover {
+    color: white;
+}
+
+#clearSearch {
+    border-radius: 0 4px 4px 0;
+}
+
+
+/* todos list */
+
+#todoUl {
+    background-color: #FFAA00;
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#todoUl li {
+    height: 35px;
+    display: flex;
+    min-width: 400px;
+    max-width: 550px;
+    width: 40vw;
+    user-select: none;
+}
+
+#todoUl li:hover .todoContainer {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.75);
+}
+
+#todoUl li:hover .deleteBtn,
+#todoUl li:hover .completeBtn,
+#todoUl li:hover .orderBtn {
+    width: 25px;
+}
+
+#todoUl li:hover .deleteBtn i,
+#todoUl li:hover .completeBtn i,
+#todoUl li:hover .orderBtn i {
+    width: 25px;
+    font-size: 14px;
+}
+
+.todoContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    line-height: 100%;
+    padding: 0 10px;
+}
+
+.todoPriority {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.deleteBtn,
+.completeBtn,
+.orderBtn {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0;
+    width: 0;
+    height: 35px;
+    border: none;
+    transition: width 0.3s ease-in-out;
+    transition-delay: 0.3s;
+}
+
+.deleteBtn i,
+.completeBtn i,
+.orderBtn i {
+    background-color: #FFAA00;
+    height: 25px;
+    width: 0;
+    font-size: 0px;
+    padding-top: 11px;
+    transition: width, font-size 0.3s ease-in-out;
+    transition-delay: 0.3s;
+}
+
+.orderBtn {
+    cursor: move;
+}
+
+.deleteBtn i {
+    color: #FF4800;
+}
+
+.completeBtn i {
+    color: #4f772d;
+}
+
+.orderBtn i {
+    color: black;
+}
+
+
+/* priority design */
+
+.priority-1 {
+    background-color: #FF8500;
+}
+
+.priority-2 {
+    background-color: #FF7900;
+}
+
+.priority-3 {
+    background-color: #FF6D00;
+}
+
+.priority-4 {
+    background-color: #FF6000;
+}
+
+.priority-5 {
+    background-color: #FF5400;
+    font-weight: 600;
+}
+
+
+/* special design */
+
+.completed {
+    text-decoration: line-through;
+    background-color: #4f772d;
+    font-weight: 400;
+    color: rgba(200, 200, 200, 0.7);
+}
+
+.matchedSearch {
+    color: black;
+    order: -1;
+}
